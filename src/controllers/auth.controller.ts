@@ -7,63 +7,39 @@ import { prisma } from "../prisma.client";
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export const googleAuth = async (req: Request, res: Response) => {
-	const { token } = req.body;
+	const { userInfo } = req.body;
+	console.log(userInfo);
 
-	if (!token)
-		return res
-			.status(400)
-			.json({ error: "No token provided. Token is required" });
+	if (!userInfo) return res.json({ error: "No user specified" }).status(400);
+
+	const { name, email, sub } = userInfo;
 
 	try {
-		const ticket = await client.verifyIdToken({
-			idToken: token,
-			audience: process.env.GOOGLE_CLIENT_ID,
-		});
-
-		const payload = ticket.getPayload();
-
-		if (!payload || !payload.email) {
-			res.status(500).json({ error: "Invalid token" });
-			return;
-		}
-
-		const email = payload.email;
-		const name = payload.name;
-
 		let user = await prisma.user.findUnique({ where: { email } });
 
 		// Create a new user in the database if no user with the specified email exists.
 		if (!user) {
+			console.log("Creating new user.");
 			user = await prisma.user.create({
 				data: {
 					email,
 					name,
-					role: email?.endsWith(process.env.INSTITUTE_DOMAIN as string)
-						? "STUDENT"
-						: "TEACHER",
-					googleId: payload.sub,
+					googleId: sub,
 				},
 			});
 		}
 
-		// Generate JWT Token with the userId, email & role as the payload.
-		const jwtToken = generateToken({
-			userId: user.id,
-			email: user.email,
+		const token = generateToken({
+			name,
+			email,
 			role: user.role,
 		});
 
 		return res
-			.json({
-				token: jwtToken,
-				user,
-				message: "Authenticated successfully",
-			})
-			.status(202);
+			.json({ token, user, message: "Authenticated successfully!" })
+			.status(200);
 	} catch (error) {
-		console.log("Error encountered while authentication", error);
-		return res
-			.status(500)
-			.json({ error: `Authentication failed. Error : ${error}` });
+		console.log("Error occured", error);
+		return res.status(400).json({ error });
 	}
 };
