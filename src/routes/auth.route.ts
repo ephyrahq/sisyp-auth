@@ -4,6 +4,6 @@ import { googleAuth } from "../controllers/auth.controller";
 
 const router = express.Router();
 
-router.post("/api/auth/google/callback", googleAuth as any);
+router.post("/google/callback", googleAuth as any);
 
 export default router;
