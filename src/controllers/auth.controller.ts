@@ -7,8 +7,16 @@ import { prisma } from "../prisma.client";
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export const googleAuth = async (req: Request, res: Response) => {
-	const { userInfo } = req.body;
-	console.log(userInfo);
+	const { accessToken } = req.body;
+
+	const googleUserResponse = await fetch(
+		`https://www.googleapis.com/oauth2/v3/userinfo`,
+		{
+			headers: { Authorization: `Bearer ${accessToken}` },
+		}
+	);
+
+	const userInfo = await googleUserResponse.json();
 
 	if (!userInfo) return res.json({ error: "No user specified" }).status(400);
 
@@ -36,7 +44,7 @@ export const googleAuth = async (req: Request, res: Response) => {
 		});
 
 		return res
-			.json({ token, user, message: "Authenticated successfully!" })
+			.json({ token, user, userInfo, message: "Authenticated successfully!" })
 			.status(200);
 	} catch (error) {
 		console.log("Error occured", error);
