@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 
 import authRouter from "./routes/auth.route";
+import userRouter from "./routes/user.route";
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
@@ -18,6 +19,7 @@ app.use(
 app.use(express.json());
 
 app.use("/api/auth", authRouter);
+app.use("/api/auth/user", userRouter);
 
 app.get("/", (req, res) => {
 	res.send("Backend server is running!");
