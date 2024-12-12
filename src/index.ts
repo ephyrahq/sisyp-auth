@@ -2,13 +2,14 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 
-import authRouter from "./routes/auth.route";
-import userRouter from "./routes/user.route";
+import { auth } from "./auth";
+import { toNodeHandler } from "better-auth/node";
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
 
 const app = express();
+
 app.use(
 	cors({
 		origin: process.env.FRONTEND_URL || "http://localhost:3000", // Next.js frontend URL
@@ -16,14 +17,19 @@ app.use(
 		credentials: true, // Allow sending cookies if needed
 	})
 );
-app.use(express.json());
 
-app.use("/api/auth", authRouter);
-app.use("/api/auth/user", userRouter);
+app.use((req, _res, next) => {
+	console.log(`Incoming request: ${req.method} ~ ${req.url}`);
+	next();
+});
 
 app.get("/", (req, res) => {
-	res.send("Backend server is running!");
+	res.send("Authentication server is running!");
 });
+
+app.all("/api/auth/*", toNodeHandler(auth));
+
+app.use(express.json());
 
 app.listen(PORT, () => {
 	console.log(`Backend running on port : ${PORT}`);
