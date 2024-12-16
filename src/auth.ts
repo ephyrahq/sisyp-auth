@@ -12,6 +12,17 @@ export const auth = betterAuth({
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
 		},
 	},
+	user: {
+		modelName: "user",
+		additionalFields: {
+			role: {
+				type: "string",
+				required: true,
+				input: false,
+				defaultValue: "STUDENT",
+			},
+		},
+	},
 	trustedOrigins: [process.env.FRONTEND_URL!],
 	advanced: {
 		cookiePrefix: "easel",
