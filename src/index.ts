@@ -19,7 +19,11 @@ app.use(
 );
 
 app.use((req, _res, next) => {
-	console.log(`Incoming request: ${req.method} ~ ${req.url}`);
+	console.log(
+		`Incoming request: ${req.method} ~ ${
+			req.url
+		} [${new Date().toLocaleTimeString("en-US", { hour12: false })}]`
+	);
 	next();
 });
 
