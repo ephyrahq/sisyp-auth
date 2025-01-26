@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/ephyrahq/sisyp-auth#readme",
   "dependencies": {
+    "@ephyrahq/sisyp-db": "^1.0.0",
     "@prisma/client": "5.22.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/express": "^5.0.0",
