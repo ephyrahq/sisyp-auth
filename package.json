@@ -24,7 +24,6 @@
   "homepage": "https://github.com/ephyrahq/sisyp-auth#readme",
   "dependencies": {
     "@ephyrahq/sisyp-db": "^1.0.0",
-    "@prisma/client": "5.22.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/express": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.7",
@@ -41,7 +40,6 @@
     "typescript": "^5.6.3"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.17",
-    "prisma": "5.22.0"
+    "@types/cors": "^2.8.17"
   }
 }
