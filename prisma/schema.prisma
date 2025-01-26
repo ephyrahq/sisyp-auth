@@ -68,38 +68,6 @@ model Verification {
   @@map("verification")
 }
 
-model Subject {
-  sub_id String @id @unique
-  name   String
-}
-
-model Teacher {
-  email      String @unique
-  subjects   Json
-  teacher_id String @id @unique
-}
-
-model Branch {
-  branch_id String @id @unique
-  Slot      Slot?
-}
-
-model Slot {
-  branch_id String @id @unique
-  monday    Json?
-  tuesday   Json?
-  wednesday Json?
-  thursday  Json?
-  friday    Json?
-  Branch    Branch @relation(fields: [branch_id], references: [branch_id])
-}
-
-model Students {
-  bt_id    String @id @unique
-  email    String @unique
-  subjects Json
-}
-
 enum Role {
   STUDENT
   TEACHER
